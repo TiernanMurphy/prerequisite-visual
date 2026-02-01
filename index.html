@@ -115,7 +115,7 @@
 
         .node-label {
             fill: #c8d4e0;
-            font-size: 11.5px;
+            font-size: 14px;
             font-weight: 500;
             text-anchor: middle;
             dominant-baseline: central;
@@ -142,19 +142,20 @@
             border: 1px solid rgba(100, 140, 180, 0.25);
             border-radius: 8px;
             padding: 10px 14px;
-            font-size: 12px;
+            font-size: 20px;
             color: #8a9bb0;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.15s;
             z-index: 100;
-            max-width: 200px;
+            max-width: 250px;
+            height: auto;
         }
 
         #tooltip .tt-title {
             color: #d4dfe8;
             font-weight: 500;
-            font-size: 13px;
+            font-size: 20px;
             margin-bottom: 4px;
         }
     </style>
@@ -204,25 +205,23 @@
     // Edges: source → target means source is a prereq for target.
     // Read directly from your sketch.
     const prereqs = [
-        // BIOL chain
+        // BIOL 105/L chain
         { source: "BIOL 105/L", target: "BIOL 106" },
         { source: "BIOL 105/L", target: "BIOL 170/L" },
         { source: "BIOL 106",   target: "BIOL 207/L" },
-
-        // Into HPHY 241
         { source: "BIOL 105/L", target: "HPHY 241/L" },
-        { source: "CHEM 101/L", target: "HPHY 241/L" },
 
-        // CHEM chain
+        // CHEM 101/L chain
+        { source: "CHEM 101/L", target: "HPHY 241/L" },
         { source: "CHEM 101/L", target: "CHEM 230/L" },
 
-        // PHYS chain
+        // PHYS 111/L -> PHYS 112/L
         { source: "PHYS 111/L", target: "PHYS 112/L" },
 
         // HPHY 241 → 242
         { source: "HPHY 241/L", target: "HPHY 242/L" },
 
-        // HPHY 242 feeds into several
+        // HPHY 242 chain
         { source: "HPHY 242/L", target: "HPHY 205" },
         { source: "HPHY 242/L", target: "HPHY 210" },
         { source: "HPHY 242/L", target: "HPHY 274" },
@@ -236,7 +235,7 @@
         // PHYS 112 → HPHY 274
         { source: "PHYS 112/L", target: "HPHY 274" },
 
-        // HPHY 205 → 375, 376
+        // HPHY 205 → HPHY 375/L, HPHY 376/L
         { source: "HPHY 205",   target: "HPHY 375/L" },
         { source: "HPHY 205",   target: "HPHY 376/L" },
 
@@ -244,15 +243,14 @@
         { source: "HPHY 210",   target: "HPHY 375/L" },
         { source: "HPHY 210",   target: "HPHY 376/L" },
 
-        // Lower chain
+        // Final HPHY courses
         { source: "HPHY 375/L", target: "HPHY 441L" },
         { source: "HPHY 376/L", target: "HPHY 441L" },
         { source: "HPHY 441L",  target: "HPHY 442L" },
         { source: "HPHY 442L",  target: "HPHY 499" },
     ];
 
-    // ─── LAYOUT: manual positions (normalized 0–1), tuned to match your sketch ───
-    // x, y in [0, 1] range — scaled to viewport later.
+    // node layout, scaled to viewport later
     const positions = {
         "PSYC 101":   { x: 0.05,  y: 0.08 },
         "MATH 148+":  { x: 0.18,  y: 0.08 },
@@ -276,7 +274,7 @@
         "HPHY 499":   { x: 0.36,  y: 0.90 },
     };
 
-    // ─── RENDER ──────────────────────────────────────────────────────────────────
+    // render
     const svg = d3.select("#chart");
     const tooltip = d3.select("#tooltip");
 
